@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Generation Debug</title>
+</head>
+<body>
+    <h1>PDF Generation Debug Test</h1>
+    <button id="testBtn">Test jsPDF Loading</button>
+    <button id="generateBtn">Generate Test PDF</button>
+    <div id="log"></div>
+
+    <script>
+        const log = (message) => {
+            console.log(message);
+            document.getElementById('log').innerHTML += '<p>' + message + '</p>';
+        };
+
+        // Step 1: Test basic jsPDF loading
+        document.getElementById('testBtn').addEventListener('click', async () => {
+            log('Step 1: Testing jsPDF loading...');
+            
+            try {
+                // Check if already loaded
+                if (window.jsPDF) {
+                    log('✅ jsPDF already available');
+                    return;
+                }
+
+                log('Loading jsPDF from CDN...');
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                script.async = true;
+                script.crossOrigin = 'anonymous';
+
+                script.onload = () => {
+                    log('Script loaded, checking window.jsPDF...');
+                    setTimeout(() => {
+                        if (window.jsPDF) {
+                            log('✅ jsPDF successfully loaded and available');
+                            log('jsPDF constructor: ' + typeof window.jsPDF.jsPDF);
+                        } else {
+                            log('❌ jsPDF not available after script load');
+                        }
+                    }, 100);
+                };
+
+                script.onerror = (error) => {
+                    log('❌ Failed to load jsPDF script: ' + error);
+                };
+
+                document.head.appendChild(script);
+
+            } catch (error) {
+                log('❌ Error in test: ' + error.message);
+            }
+        });
+
+        // Step 2: Test PDF generation
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            log('Step 2: Testing PDF generation...');
+            
+            try {
+                if (!window.jsPDF) {
+                    log('❌ jsPDF not loaded. Run Step 1 first.');
+                    return;
+                }
+
+                log('Creating PDF document...');
+                const { jsPDF } = window;
+                const doc = new jsPDF();
+                
+                log('✅ PDF document created');
+                
+                // Add some content
+                doc.setFont('helvetica');
+                doc.setFontSize(24);
+                doc.text('TEST PDF', 20, 30);
+                doc.setFontSize(12);
+                doc.text('This is a test PDF generated for debugging', 20, 50);
+                
+                log('✅ Content added to PDF');
+                
+                // Save the PDF
+                doc.save('debug-test.pdf');
+                log('✅ PDF saved successfully');
+                
+            } catch (error) {
+                log('❌ Error generating PDF: ' + error.message);
+                log('Error stack: ' + error.stack);
+            }
+        });
+    </script>
+</body>
+</html>

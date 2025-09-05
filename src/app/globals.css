@@ -1,8 +1,55 @@
 @import "tailwindcss";
+@import "../styles/text-fixes.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card-background: #ffffff;
+  --card-foreground: #0f172a;
+  
+  /* Enhanced contrast colors for light mode */
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  
+  /* Status colors with better contrast */
+  --success: #059669;
+  --warning: #d97706;
+  --error: #dc2626;
+  --info: #2563eb;
+  
+  /* Interactive colors */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary: #6b7280;
+  --secondary-hover: #4b5563;
+}
+
+/* Dark theme variables - only applied when .dark class is present */
+.dark {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+  --card-background: #1e293b;
+  --card-foreground: #f1f5f9;
+  
+  /* Enhanced contrast colors for dark mode */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --text-light: #64748b;
+  
+  /* Status colors for dark mode */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+  
+  /* Interactive colors for dark mode */
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary: #64748b;
+  --secondary-hover: #475569;
 }
 
 @theme inline {
@@ -12,15 +59,158 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Override system preferences - we handle theme manually */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not(.dark) {
+    /* Keep light theme even if system prefers dark when not explicitly dark */
+    --background: #f9fafb;
+    --foreground: #111827;
+    --card-background: #ffffff;
+    --card-foreground: #111827;
   }
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Additional utility class for cards */
+.card {
+  background-color: var(--card-background);
+  color: var(--text-primary);
+}
+
+/* Ensure smooth transitions for theme changes */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Force proper text colors in light theme */
+:root:not(.dark) {
+  /* Override any light colored text in light mode */
+  .text-gray-100,
+  .text-gray-200,
+  .text-gray-300,
+  .text-white {
+    color: var(--text-primary) !important;
+  }
+  
+  .text-gray-400 {
+    color: var(--text-muted) !important;
+  }
+  
+  .text-gray-500 {
+    color: var(--text-light) !important;
+  }
+}
+
+/* Ensure all text elements use proper colors */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary);
+}
+
+p, span, div {
+  color: inherit;
+}
+
+/* Form elements should have proper text color */
+input, textarea, select {
+  color: var(--text-primary);
+  background-color: var(--card-background);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Enhanced button styles */
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  background-color: var(--card-background);
+  color: var(--text-primary);
+  border: 2px solid var(--secondary);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--background);
+  border-color: var(--secondary-hover);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced link styles with better contrast */
+a {
+  color: var(--primary);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+/* Ensure links are always readable */
+.dark a {
+  color: var(--info);
+}
+
+.dark a:hover {
+  color: var(--primary-hover);
+}
+
+/* Additional utility classes */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Print styles for invoices */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  /* Force all text elements to be black when printing */
+  * {
+    color: black !important;
+    background: white !important;
+    box-shadow: none !important;
+  }
+  
+  /* Ensure borders are visible when printing */
+  table, th, td {
+    border-color: black !important;
+  }
+  
+  /* Ensure proper margins for printing */
+  @page {
+    margin: 0.5in;
+  }
+  
+  /* Prevent page breaks inside important elements */
+  .invoice-content {
+    page-break-inside: avoid;
+  }
 }

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Generation Test</title>
+</head>
+<body>
+    <h1>PDF Generation Test</h1>
+    <button id="loadLibrary">1. Load jsPDF Library</button>
+    <button id="testPDF">2. Generate Test PDF</button>
+    <button id="testInvoice">3. Test Invoice PDF</button>
+    <div id="log" style="margin-top: 20px; padding: 10px; background: #f5f5f5; white-space: pre-line; font-family: monospace;"></div>
+
+    <script>
+        const log = (message) => {
+            console.log(message);
+            const logDiv = document.getElementById('log');
+            logDiv.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+
+        // Test data
+        const testInvoice = {
+            id: 'test-1',
+            invoiceNumber: 'INV-TEST-001',
+            date: '2024-01-01',
+            dueDate: '2024-01-31', 
+            status: 'draft',
+            mode: 'manual',
+            client: {
+                name: 'Test Client Company',
+                email: 'client@testcompany.com',
+                address: '123 Business Street\nTest City, TC 12345\nUnited States',
+                phone: '+1-555-123-4567'
+            },
+            items: [
+                {
+                    id: '1',
+                    description: 'Web Development Services',
+                    quantity: 10,
+                    rate: 100.00,
+                    amount: 1000.00
+                },
+                {
+                    id: '2', 
+                    description: 'Design Consultation',
+                    quantity: 5,
+                    rate: 80.00,
+                    amount: 400.00
+                }
+            ],
+            subtotal: 1400.00,
+            tax: 140.00,
+            total: 1540.00,
+            notes: 'Payment due within 30 days. Thank you for your business!'
+        };
+
+        // Step 1: Load Library
+        document.getElementById('loadLibrary').addEventListener('click', async () => {
+            log('=== STEP 1: Loading jsPDF Library ===');
+            
+            try {
+                // Check if already loaded
+                if (window.jsPDF) {
+                    log('✅ jsPDF already available: ' + typeof window.jsPDF);
+                    return;
+                }
+
+                log('Loading jsPDF from CDN...');
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                script.async = true;
+                script.crossOrigin = 'anonymous';
+
+                const loadPromise = new Promise((resolve, reject) => {
+                    script.onload = () => {
+                        log('Script loaded, checking window object...');
+                        setTimeout(() => {
+                            log('window.jsPDF type: ' + typeof window.jsPDF);
+                            if (window.jsPDF && typeof window.jsPDF === 'function') {
+                                log('✅ jsPDF loaded successfully!');
+                                resolve();
+                            } else {
+                                log('❌ jsPDF not found on window object');
+                                log('Available properties: ' + Object.keys(window).filter(k => k.includes('jsPDF') || k.includes('pdf')));
+                                reject(new Error('jsPDF not available'));
+                            }
+                        }, 200);
+                    };
+
+                    script.onerror = (error) => {
+                        log('❌ Failed to load script: ' + error);
+                        reject(error);
+                    };
+                });
+
+                document.head.appendChild(script);
+                await loadPromise;
+
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+            }
+        });
+
+        // Step 2: Test Basic PDF
+        document.getElementById('testPDF').addEventListener('click', () => {
+            log('=== STEP 2: Testing Basic PDF Creation ===');
+            
+            try {
+                if (!window.jsPDF) {
+                    log('❌ jsPDF not loaded. Run Step 1 first.');
+                    return;
+                }
+
+                log('Creating PDF document...');
+                const jsPDF = window.jsPDF;
+                log('jsPDF constructor: ' + typeof jsPDF);
+                
+                const doc = new jsPDF();
+                log('✅ PDF document created');
+                
+                doc.text('Hello World!', 10, 10);
+                doc.text('This is a test PDF', 10, 20);
+                log('✅ Text added to PDF');
+                
+                doc.save('test.pdf');
+                log('✅ PDF download triggered');
+                
+            } catch (error) {
+                log('❌ Error: ' + error.message);
+                log('Stack: ' + error.stack);
+            }
+        });
+
+        // Step 3: Test Invoice PDF
+        document.getElementById('testInvoice').addEventListener('click', () => {
+            log('=== STEP 3: Testing Invoice PDF Generation ===');
+            
+            try {
+                if (!window.jsPDF) {
+                    log('❌ jsPDF not loaded. Run Step 1 first.');
+                    return;
+                }
+
+                const jsPDF = window.jsPDF;
+                const doc = new jsPDF();
+                
+                log('Creating invoice PDF...');
+                
+                // Header
+                doc.setFontSize(24);
+                doc.setTextColor(44, 62, 80);
+                doc.text('INVOICE', 20, 30);
+                
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                doc.text(testInvoice.invoiceNumber, 20, 40);
+                
+                // Bill To
+                doc.setFontSize(14);
+                doc.setTextColor(44, 62, 80);
+                doc.text('Bill To:', 20, 60);
+                
+                doc.setFontSize(10);
+                doc.setTextColor(80, 80, 80);
+                doc.text(testInvoice.client.name, 20, 70);
+                doc.text(testInvoice.client.email, 20, 80);
+                
+                // Items
+                doc.text('Description', 20, 100);
+                doc.text('Qty', 120, 100);
+                doc.text('Rate', 140, 100);
+                doc.text('Amount', 165, 100);
+                
+                let y = 110;
+                testInvoice.items.forEach(item => {
+                    doc.text(item.description, 20, y);
+                    doc.text(item.quantity.toString(), 120, y);
+                    doc.text('$' + item.rate.toFixed(2), 140, y);
+                    doc.text('$' + item.amount.toFixed(2), 165, y);
+                    y += 10;
+                });
+                
+                // Total
+                doc.text('Total: $' + testInvoice.total.toFixed(2), 140, y + 20);
+                
+                log('✅ Invoice content added');
+                
+                doc.save('invoice-test.pdf');
+                log('✅ Invoice PDF downloaded successfully!');
+                
+            } catch (error) {
+                log('❌ Invoice PDF Error: ' + error.message);
+                log('Stack: ' + error.stack);
+            }
+        });
+
+        log('PDF Test Page Ready. Click buttons in order: 1 → 2 → 3');
+    </script>
+</body>
+</html>

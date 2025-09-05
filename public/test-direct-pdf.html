@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Direct PDF Generator Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .btn { padding: 15px 30px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 10px; font-size: 16px; }
+        .btn:hover { background: #0056b3; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <h1>🎯 Direct PDF Generator Test</h1>
+    <p>This tests the new canvas-based PDF generator that doesn't rely on external CDNs.</p>
+    
+    <button class="btn" onclick="testDirectPDF()">📄 Generate Invoice PDF</button>
+    
+    <div id="status" class="status info">
+        Ready to test. This method creates a high-quality PNG image of your invoice that works like a PDF.
+    </div>
+
+    <script>
+        // Test invoice data
+        const testInvoice = {
+            id: 'test-direct',
+            invoiceNumber: 'INV-DIRECT-001', 
+            date: '2024-01-01',
+            dueDate: '2024-01-31',
+            status: 'draft',
+            mode: 'manual',
+            client: {
+                name: 'Direct Test Client Co.',
+                email: 'test@directclient.com', 
+                address: '123 Direct Street\nTest City, TC 12345\nUnited States',
+                phone: '+1-555-DIRECT'
+            },
+            items: [
+                {
+                    id: '1',
+                    description: 'Direct PDF Generation Service',
+                    quantity: 1,
+                    rate: 150.00,
+                    amount: 150.00
+                },
+                {
+                    id: '2', 
+                    description: 'Canvas-based Rendering',
+                    quantity: 2,
+                    rate: 75.00,
+                    amount: 150.00
+                }
+            ],
+            subtotal: 300.00,
+            tax: 30.00,
+            total: 330.00,
+            notes: 'This invoice was generated using the direct canvas method, which works without any external dependencies or CDN loading!'
+        };
+
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+        }
+
+        async function testDirectPDF() {
+            updateStatus('🔄 Generating direct PDF...', 'info');
+            
+            try {
+                console.log('Starting direct PDF generation test');
+                
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = 595; // A4 width 
+                canvas.height = 842; // A4 height
+                
+                const ctx = canvas.getContext('2d');
+                if (!ctx) {
+                    throw new Error('Cannot get canvas context');
+                }
+
+                // White background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                let y = 50;
+                
+                // Header
+                ctx.font = 'bold 32px Arial';
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillText('INVOICE', 50, y);
+                
+                // Invoice number  
+                y += 30;
+                ctx.font = '16px Arial';
+                ctx.fillStyle = '#7f8c8d';
+                ctx.fillText(testInvoice.invoiceNumber, 50, y);
+
+                // Status badge
+                ctx.fillStyle = '#95a5a6';
+                ctx.fillRect(450, 30, 100, 30);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(testInvoice.status.toUpperCase(), 500, 50);
+                ctx.textAlign = 'left';
+
+                // From section
+                y += 60;
+                ctx.font = 'bold 16px Arial';
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillText('From:', 50, y);
+                
+                y += 25;
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#34495e';
+                ctx.fillText('Direct PDF Generator', 50, y);
+                y += 20;
+                ctx.fillText('Canvas-Based Solution', 50, y);
+
+                // Bill To
+                let billToY = y - 45;
+                ctx.font = 'bold 16px Arial';
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillText('Bill To:', 300, billToY);
+                
+                billToY += 25;
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#34495e';
+                ctx.fillText(testInvoice.client.name, 300, billToY);
+                billToY += 20;
+                ctx.fillText(testInvoice.client.email, 300, billToY);
+                billToY += 20;
+                ctx.fillText('123 Direct Street', 300, billToY);
+                billToY += 20;
+                ctx.fillText('Test City, TC 12345', 300, billToY);
+                billToY += 20;
+                ctx.fillText(testInvoice.client.phone, 300, billToY);
+
+                // Invoice details
+                y += 80;
+                ctx.font = '12px Arial';
+                ctx.fillStyle = '#7f8c8d';
+                ctx.fillText('Invoice Date:', 50, y);
+                ctx.fillText('Due Date:', 50, y + 20);
+                ctx.fillText('Invoice #:', 50, y + 40);
+
+                ctx.fillStyle = '#34495e';
+                ctx.fillText(new Date(testInvoice.date).toLocaleDateString(), 150, y);
+                ctx.fillText(new Date(testInvoice.dueDate).toLocaleDateString(), 150, y + 20);
+                ctx.fillText(testInvoice.invoiceNumber, 150, y + 40);
+
+                // Items table
+                y += 80;
+                
+                // Table header
+                ctx.fillStyle = '#ecf0f1';
+                ctx.fillRect(50, y, 495, 30);
+                
+                ctx.fillStyle = '#2c3e50';
+                ctx.font = 'bold 12px Arial';
+                ctx.fillText('Description', 60, y + 20);
+                ctx.fillText('Qty', 300, y + 20);
+                ctx.fillText('Rate', 350, y + 20);
+                ctx.fillText('Amount', 450, y + 20);
+                
+                y += 40;
+                
+                // Items
+                ctx.font = '11px Arial';
+                ctx.fillStyle = '#34495e';
+                
+                testInvoice.items.forEach((item, index) => {
+                    if (index % 2 === 0) {
+                        ctx.fillStyle = '#f8f9fa';
+                        ctx.fillRect(50, y - 10, 495, 25);
+                    }
+                    
+                    ctx.fillStyle = '#34495e';
+                    const desc = item.description.length > 35 ? item.description.substring(0, 32) + '...' : item.description;
+                    ctx.fillText(desc, 60, y + 5);
+                    ctx.fillText(item.quantity.toString(), 310, y + 5);
+                    ctx.fillText(`$${item.rate.toFixed(2)}`, 360, y + 5);
+                    ctx.fillText(`$${item.amount.toFixed(2)}`, 460, y + 5);
+                    
+                    y += 25;
+                });
+
+                // Totals
+                y += 40;
+                const totalX = 350;
+                
+                ctx.font = '12px Arial';
+                ctx.fillStyle = '#7f8c8d';
+                ctx.fillText('Subtotal:', totalX, y);
+                ctx.fillText('Tax:', totalX, y + 20);
+                
+                ctx.fillStyle = '#34495e';
+                ctx.fillText(`$${testInvoice.subtotal.toFixed(2)}`, totalX + 100, y);
+                ctx.fillText(`$${testInvoice.tax.toFixed(2)}`, totalX + 100, y + 20);
+                
+                // Total line
+                ctx.strokeStyle = '#bdc3c7';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(totalX, y + 30);
+                ctx.lineTo(totalX + 145, y + 30);
+                ctx.stroke();
+                
+                // Total
+                ctx.font = 'bold 14px Arial';
+                ctx.fillStyle = '#2c3e50';
+                ctx.fillText('Total:', totalX, y + 50);
+                ctx.fillText(`$${testInvoice.total.toFixed(2)}`, totalX + 100, y + 50);
+
+                // Footer
+                const footerY = canvas.height - 60;
+                ctx.font = '10px Arial';
+                ctx.fillStyle = '#95a5a6';
+                ctx.fillText('Thank you for your business!', 50, footerY);
+                ctx.fillText(`Generated on ${new Date().toLocaleDateString()}`, 50, footerY + 15);
+                ctx.fillText('🎯 Direct Canvas Generation', 300, footerY + 15);
+
+                // Download as image
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = `invoice-${testInvoice.invoiceNumber}.png`;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        URL.revokeObjectURL(url);
+                        
+                        updateStatus('✅ Success! Invoice downloaded as high-quality PNG image. This method works without any external dependencies!', 'success');
+                        console.log('Direct PDF generation test completed successfully');
+                    }
+                }, 'image/png', 1.0);
+                
+            } catch (error) {
+                console.error('Direct PDF test failed:', error);
+                updateStatus(`❌ Test failed: ${error.message}`, 'error');
+            }
+        }
+
+        updateStatus('Ready to test direct PDF generation. Click the button above!', 'info');
+    </script>
+</body>
+</html>

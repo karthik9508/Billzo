@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Generation Debug Tool</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            max-width: 1000px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            line-height: 1.6; 
+        }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .btn { 
+            padding: 12px 24px; 
+            margin: 8px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: black; }
+        .btn-danger { background: #dc3545; color: white; }
+        .log { 
+            background: #f8f9fa; 
+            border: 1px solid #e9ecef; 
+            padding: 15px; 
+            margin: 15px 0; 
+            border-radius: 6px; 
+            min-height: 300px; 
+            font-family: 'Monaco', 'Menlo', monospace; 
+            white-space: pre-line; 
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        .status { padding: 10px; margin: 10px 0; border-radius: 6px; }
+        .status-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .status-error { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .status-info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .card { background: white; border: 1px solid #e9ecef; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔧 PDF Generation Debug Tool</h1>
+        <p>Comprehensive testing for jsPDF loading and invoice PDF generation issues</p>
+    </div>
+
+    <div class="grid">
+        <button class="btn btn-primary" onclick="testNetwork()">🌐 Test Network</button>
+        <button class="btn btn-primary" onclick="testCDNs()">📡 Test All CDNs</button>
+        <button class="btn btn-success" onclick="testPDFGeneration()">📄 Test PDF Generation</button>
+        <button class="btn btn-warning" onclick="testFallback()">🔄 Test Fallback</button>
+        <button class="btn btn-danger" onclick="clearLog()">🗑️ Clear Log</button>
+    </div>
+
+    <div id="status" class="status status-info">
+        Ready to test. Click buttons above to diagnose PDF generation issues.
+    </div>
+
+    <div id="log" class="log">PDF Debug Tool Loaded
+========================
+
+This tool helps diagnose PDF generation issues:
+
+1. 🌐 Test Network - Checks internet connectivity
+2. 📡 Test All CDNs - Tests all jsPDF CDN sources  
+3. 📄 Test PDF Generation - Full end-to-end test
+4. 🔄 Test Fallback - Tests offline fallback mode
+5. 🗑️ Clear Log - Clears this debug log
+
+Click any button to start testing...
+</div>
+
+    <script>
+        const log = (message, type = 'info') => {
+            const timestamp = new Date().toLocaleTimeString();
+            const logDiv = document.getElementById('log');
+            const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+            logDiv.textContent += `${timestamp} ${prefix} ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        };
+
+        const setStatus = (message, type = 'info') => {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = message;
+            statusDiv.className = `status status-${type}`;
+        };
+
+        // Test network connectivity
+        window.testNetwork = async function() {
+            log('🌐 Testing network connectivity...', 'info');
+            setStatus('Testing network connectivity...', 'info');
+            
+            try {
+                const response = await fetch('https://httpbin.org/get', { 
+                    method: 'GET',
+                    mode: 'cors',
+                    timeout: 5000 
+                });
+                
+                if (response.ok) {
+                    log('✅ Network connectivity: OK', 'success');
+                    setStatus('Network connectivity: OK', 'success');
+                } else {
+                    log(`⚠️ Network issue: ${response.status} ${response.statusText}`, 'warning');
+                    setStatus('Network connectivity: Limited', 'warning');
+                }
+            } catch (error) {
+                log(`❌ Network connectivity failed: ${error.message}`, 'error');
+                setStatus('Network connectivity: Failed', 'error');
+            }
+        };
+
+        // Test all CDN sources
+        window.testCDNs = async function() {
+            log('📡 Testing all jsPDF CDN sources...', 'info');
+            setStatus('Testing CDN sources...', 'info');
+            
+            const cdnUrls = [
+                'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+                'https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js', 
+                'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js',
+                'https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js'
+            ];
+
+            let successCount = 0;
+            
+            for (let i = 0; i < cdnUrls.length; i++) {
+                const url = cdnUrls[i];
+                log(`Testing CDN ${i + 1}/${cdnUrls.length}: ${url}`, 'info');
+                
+                try {
+                    const response = await fetch(url, { method: 'HEAD' });
+                    if (response.ok) {
+                        log(`✅ CDN ${i + 1}: Available (${response.status})`, 'success');
+                        successCount++;
+                    } else {
+                        log(`⚠️ CDN ${i + 1}: ${response.status} ${response.statusText}`, 'warning');
+                    }
+                } catch (error) {
+                    log(`❌ CDN ${i + 1}: Failed - ${error.message}`, 'error');
+                }
+            }
+            
+            if (successCount > 0) {
+                log(`✅ CDN Test Complete: ${successCount}/${cdnUrls.length} sources available`, 'success');
+                setStatus(`CDN Test: ${successCount}/${cdnUrls.length} sources available`, 'success');
+            } else {
+                log('❌ CDN Test Complete: No sources available', 'error');
+                setStatus('CDN Test: No sources available', 'error');
+            }
+        };
+
+        // Test PDF generation
+        window.testPDFGeneration = async function() {
+            log('📄 Testing PDF generation...', 'info');
+            setStatus('Testing PDF generation...', 'info');
+            
+            try {
+                // Remove existing scripts
+                document.querySelectorAll('script[src*="jspdf"]').forEach(s => s.remove());
+                
+                // Load jsPDF
+                log('Loading jsPDF library...', 'info');
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                
+                const loadPromise = new Promise((resolve, reject) => {
+                    script.onload = () => {
+                        setTimeout(() => {
+                            if (window.jsPDF && typeof window.jsPDF === 'function') {
+                                log('✅ jsPDF loaded successfully', 'success');
+                                resolve();
+                            } else {
+                                reject(new Error('jsPDF not available after load'));
+                            }
+                        }, 200);
+                    };
+                    script.onerror = () => reject(new Error('Script load failed'));
+                    setTimeout(() => reject(new Error('Load timeout')), 10000);
+                });
+
+                document.head.appendChild(script);
+                await loadPromise;
+                
+                // Create test PDF
+                log('Creating test PDF document...', 'info');
+                const jsPDF = window.jsPDF;
+                const doc = new jsPDF();
+                
+                doc.setFontSize(20);
+                doc.text('PDF Generation Test', 20, 20);
+                doc.setFontSize(12);
+                doc.text('This is a test document generated by the debug tool.', 20, 40);
+                doc.text('Generated at: ' + new Date().toLocaleString(), 20, 60);
+                
+                // Test invoice-like content
+                doc.text('Invoice #: TEST-DEBUG-001', 20, 80);
+                doc.text('Client: Debug Test Client', 20, 95);
+                doc.text('Amount: $100.00', 20, 110);
+                
+                log('✅ PDF document created successfully', 'success');
+                
+                // Save PDF
+                doc.save('debug-test-invoice.pdf');
+                log('✅ PDF downloaded successfully!', 'success');
+                setStatus('PDF Generation: SUCCESS', 'success');
+                
+            } catch (error) {
+                log(`❌ PDF generation failed: ${error.message}`, 'error');
+                setStatus(`PDF Generation: FAILED - ${error.message}`, 'error');
+            }
+        };
+
+        // Test fallback mode
+        window.testFallback = function() {
+            log('🔄 Testing fallback mode...', 'info');
+            setStatus('Testing fallback mode...', 'info');
+            
+            // Create mock jsPDF
+            window.jsPDF = function() {
+                return {
+                    text: function(text, x, y) { log(`📝 Mock: Adding text "${text}" at (${x}, ${y})`, 'info'); },
+                    setFontSize: function(size) { log(`🔤 Mock: Font size ${size}`, 'info'); },
+                    setTextColor: function(r, g, b) { log(`🎨 Mock: Text color RGB(${r}, ${g}, ${b})`, 'info'); },
+                    save: function(filename) { 
+                        log(`💾 Mock: Would save as "${filename}"`, 'success');
+                        alert(`Fallback Mode: Would download "${filename}"\n\nThis simulates PDF generation when CDN loading fails.`);
+                    }
+                };
+            };
+            
+            log('✅ Fallback mode initialized', 'success');
+            
+            // Test fallback PDF creation
+            const doc = new window.jsPDF();
+            doc.setFontSize(20);
+            doc.text('Fallback Test Invoice', 20, 20);
+            doc.setFontSize(12);
+            doc.text('This tests the offline fallback system', 20, 40);
+            doc.save('fallback-test-invoice.pdf');
+            
+            setStatus('Fallback Mode: SUCCESS', 'success');
+        };
+
+        // Clear log
+        window.clearLog = function() {
+            document.getElementById('log').textContent = 'Debug log cleared.\n\nReady for new tests...\n';
+            setStatus('Log cleared', 'info');
+        };
+
+        log('🔧 PDF Debug Tool Ready', 'success');
+        log('Use the buttons above to test different aspects of PDF generation.', 'info');
+    </script>
+</body>
+</html>

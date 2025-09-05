@@ -1,0 +1,217 @@
+/* Light Theme Text Color Fixes */
+/* This file ensures all text is properly visible in light mode */
+
+/* Force black text in light mode for common text elements */
+:root:not(.dark) body,
+:root:not(.dark) .card,
+:root:not(.dark) p,
+:root:not(.dark) span,
+:root:not(.dark) div,
+:root:not(.dark) h1,
+:root:not(.dark) h2,
+:root:not(.dark) h3,
+:root:not(.dark) h4,
+:root:not(.dark) h5,
+:root:not(.dark) h6,
+:root:not(.dark) li,
+:root:not(.dark) td,
+:root:not(.dark) th,
+:root:not(.dark) label {
+  color: #111827 !important;
+}
+
+/* Override problematic Tailwind classes in light mode */
+:root:not(.dark) .text-gray-100,
+:root:not(.dark) .text-gray-200,
+:root:not(.dark) .text-gray-300 {
+  color: #111827 !important;
+}
+
+:root:not(.dark) .text-gray-400 {
+  color: #6b7280 !important;
+}
+
+:root:not(.dark) .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+:root:not(.dark) .text-gray-600 {
+  color: #4b5563 !important;
+}
+
+/* Ensure form elements have proper text color */
+:root:not(.dark) input,
+:root:not(.dark) textarea,
+:root:not(.dark) select,
+:root:not(.dark) option {
+  color: #111827 !important;
+  background-color: white !important;
+}
+
+:root:not(.dark) input::placeholder,
+:root:not(.dark) textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Table elements */
+:root:not(.dark) table,
+:root:not(.dark) tbody,
+:root:not(.dark) thead,
+:root:not(.dark) tr {
+  color: #111827 !important;
+}
+
+/* Navigation and menu items */
+:root:not(.dark) nav,
+:root:not(.dark) .nav-item,
+:root:not(.dark) .menu-item {
+  color: #111827 !important;
+}
+
+/* Card content */
+:root:not(.dark) .card-content,
+:root:not(.dark) .card-header,
+:root:not(.dark) .card-body,
+:root:not(.dark) .card-footer {
+  color: #111827 !important;
+}
+
+/* Button text should remain as intended for colored backgrounds */
+:root:not(.dark) .bg-blue-600,
+:root:not(.dark) .bg-green-600,
+:root:not(.dark) .bg-red-600,
+:root:not(.dark) .bg-orange-600,
+:root:not(.dark) .bg-purple-600,
+:root:not(.dark) .bg-indigo-600 {
+  color: white !important;
+}
+
+/* Links should be blue and visible */
+:root:not(.dark) a:not(.btn):not(.button) {
+  color: #3b82f6 !important;
+}
+
+:root:not(.dark) a:not(.btn):not(.button):hover {
+  color: #2563eb !important;
+}
+
+/* Status badges should maintain their intended colors */
+:root:not(.dark) .status-paid {
+  background-color: #10b981;
+  color: white !important;
+}
+
+:root:not(.dark) .status-pending {
+  background-color: #f59e0b;
+  color: white !important;
+}
+
+:root:not(.dark) .status-overdue {
+  background-color: #ef4444;
+  color: white !important;
+}
+
+/* Invoice specific elements */
+:root:not(.dark) .invoice-content,
+:root:not(.dark) .invoice-header,
+:root:not(.dark) .invoice-body,
+:root:not(.dark) .invoice-footer {
+  color: #111827 !important;
+}
+
+/* Dashboard stats */
+:root:not(.dark) .stats-card {
+  color: #111827 !important;
+}
+
+:root:not(.dark) .stats-value {
+  color: #111827 !important;
+  font-weight: 600;
+}
+
+/* Settings page elements */
+:root:not(.dark) .settings-section {
+  color: #111827 !important;
+}
+
+/* Theme toggle specific - should show appropriate text */
+:root:not(.dark) .theme-toggle {
+  color: #111827 !important;
+}
+
+/* Enhanced Dark Mode Contrast Fixes */
+.dark .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+.dark .text-gray-400 {
+  color: #9ca3af !important;
+}
+
+.dark .text-gray-300 {
+  color: #d1d5db !important;
+}
+
+/* Better dark mode backgrounds for better contrast */
+.dark .bg-gray-800 {
+  background-color: #1f2937 !important;
+}
+
+.dark .bg-gray-700 {
+  background-color: #374151 !important;
+}
+
+/* Enhanced status colors for dark mode */
+.dark .text-green-600 {
+  color: #10b981 !important;
+}
+
+.dark .text-red-600 {
+  color: #f87171 !important;
+}
+
+.dark .text-blue-600 {
+  color: #60a5fa !important;
+}
+
+.dark .text-yellow-600 {
+  color: #fbbf24 !important;
+}
+
+/* Border improvements for dark mode */
+.dark .border-gray-300 {
+  border-color: #4b5563 !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #374151 !important;
+}
+
+/* Card improvements for dark mode */
+.dark .card {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+}
+
+/* Input improvements for dark mode */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #f3f4f6 !important;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Button hover states for better contrast */
+.dark .hover\:bg-gray-700:hover {
+  background-color: #4b5563 !important;
+}
+
+.dark .hover\:bg-gray-800:hover {
+  background-color: #374151 !important;
+}

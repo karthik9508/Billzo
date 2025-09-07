@@ -8,6 +8,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: '📊' },
   { name: 'Invoices', href: '/invoices', icon: '📄' },
   { name: 'Create Invoice', href: '/invoices/new', icon: '➕' },
+  { name: 'Customer Statements', href: '/customer-statements', icon: '📋' },
   { name: 'Settings', href: '/settings', icon: '⚙️' },
 ];
 
@@ -33,7 +34,7 @@ export default function Sidebar() {
                 href={item.href}
                 className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                   isActive
-                    ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
+                    ? 'bg-[#1E3A8A]/10 dark:bg-[#1E3A8A]/30 text-[#1E3A8A] dark:text-[#60A5FA]'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100'
                 }`}
               >

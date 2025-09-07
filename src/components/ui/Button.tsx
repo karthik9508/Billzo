@@ -10,13 +10,13 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Primary - High contrast blue
+        // Primary - Deep Blue (#1E3A8A)
         primary: [
-          "bg-blue-600 text-white shadow-sm",
-          "hover:bg-blue-700 hover:shadow-md",
-          "active:bg-blue-800 active:shadow-sm",
-          "focus:ring-blue-500",
-          "dark:bg-blue-600 dark:hover:bg-blue-700"
+          "bg-[#1E3A8A] text-white shadow-sm",
+          "hover:bg-[#1E40AF] hover:text-white hover:shadow-md",
+          "active:bg-[#1E293B] active:text-white active:shadow-sm",
+          "focus:ring-[#1E3A8A]",
+          "dark:bg-[#1E3A8A] dark:text-white dark:hover:bg-[#1E40AF] dark:hover:text-white"
         ],
         
         // Secondary - Well-defined borders
@@ -29,13 +29,13 @@ const buttonVariants = cva(
           "dark:hover:bg-gray-700 dark:hover:border-gray-500"
         ],
         
-        // Success - For positive actions
+        // Success - Vibrant Green (#22C55E)
         success: [
-          "bg-green-600 text-white shadow-sm",
-          "hover:bg-green-700 hover:shadow-md",
-          "active:bg-green-800 active:shadow-sm",
-          "focus:ring-green-500",
-          "dark:bg-green-600 dark:hover:bg-green-700"
+          "bg-[#22C55E] text-white shadow-sm",
+          "hover:bg-[#16A34A] hover:text-white hover:shadow-md",
+          "active:bg-[#15803D] active:text-white active:shadow-sm",
+          "focus:ring-[#22C55E]",
+          "dark:bg-[#22C55E] dark:text-white dark:hover:bg-[#16A34A] dark:hover:text-white"
         ],
         
         // Danger - For destructive actions
@@ -64,14 +64,14 @@ const buttonVariants = cva(
           "dark:text-gray-300 dark:hover:bg-gray-800 dark:active:bg-gray-700"
         ],
         
-        // Outline - Similar to secondary but more subtle
+        // Outline - Deep Blue outline
         outline: [
-          "bg-transparent text-blue-600 border border-blue-600",
-          "hover:bg-blue-50 hover:text-blue-700",
-          "active:bg-blue-100",
-          "focus:ring-blue-500",
-          "dark:text-blue-400 dark:border-blue-400",
-          "dark:hover:bg-blue-950 dark:hover:text-blue-300"
+          "bg-transparent text-[#1E3A8A] border border-[#1E3A8A]",
+          "hover:bg-[#1E3A8A]/10 hover:text-[#1E3A8A]",
+          "active:bg-[#1E3A8A]/20",
+          "focus:ring-[#1E3A8A]",
+          "dark:text-[#60A5FA] dark:border-[#60A5FA]",
+          "dark:hover:bg-[#1E3A8A]/20 dark:hover:text-[#60A5FA]"
         ]
       },
       
@@ -122,10 +122,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const buttonClasses = cn(buttonVariants({ variant, size, fullWidth, className }));
     
     if (asChild) {
-      return React.cloneElement(children as React.ReactElement, {
-        className: buttonClasses,
+      const child = children as React.ReactElement<any>;
+      return React.cloneElement(child, {
+        className: cn(buttonClasses, child.props?.className),
         ...props
-      });
+      } as any);
     }
 
     return (

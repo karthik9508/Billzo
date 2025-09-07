@@ -99,7 +99,7 @@ export default function SettingsPage() {
             <div>
               <h4 className="font-medium text-gray-900 dark:text-gray-100 mb-2">Theme</h4>
               <p className="text-sm text-gray-600 dark:text-gray-400 capitalize">
-                {settings?.preferences?.theme || 'System'}
+                {settings?.theme || 'System'}
               </p>
             </div>
             <div>

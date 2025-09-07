@@ -99,7 +99,7 @@ export default function AIInvoicePage() {
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-[#1E3A8A] rounded-xl mb-4">
           <span className="text-white text-2xl">🤖</span>
         </div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">AI Invoice Generator</h1>
@@ -117,7 +117,7 @@ export default function AIInvoicePage() {
               required
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="w-full px-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-base resize-none transition-all duration-200"
+              className="w-full px-4 py-4 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A] focus:border-[#1E3A8A] text-base resize-none transition-all duration-200"
               rows={6}
               placeholder="Example: Invoice John Doe at ABC Corp for web design: logo ($800), website ($2000), SEO ($500). Due in 30 days."
             />
@@ -136,22 +136,22 @@ export default function AIInvoicePage() {
         {/* AI Features Highlight */}
         <div className="grid md:grid-cols-3 gap-4">
           <div className="text-center p-4">
-            <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <span className="text-blue-600 text-xl">📝</span>
+            <div className="w-12 h-12 bg-[#1E3A8A]/10 dark:bg-[#1E3A8A]/30 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <span className="text-[#1E3A8A] text-xl">📝</span>
             </div>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Smart Parsing</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Automatically extracts client info and services</p>
           </div>
           <div className="text-center p-4">
-            <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <span className="text-green-600 text-xl">💰</span>
+            <div className="w-12 h-12 bg-[#22C55E]/10 dark:bg-[#22C55E]/30 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <span className="text-[#22C55E] text-xl">💰</span>
             </div>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Auto Calculations</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Handles taxes, totals, and pricing</p>
           </div>
           <div className="text-center p-4">
-            <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <span className="text-purple-600 text-xl">⚡</span>
+            <div className="w-12 h-12 bg-[#1E3A8A]/10 dark:bg-[#1E3A8A]/30 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <span className="text-[#1E3A8A] text-xl">⚡</span>
             </div>
             <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">Instant Results</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">Professional invoice in seconds</p>
@@ -160,7 +160,7 @@ export default function AIInvoicePage() {
 
         {/* Quick Examples - Collapsible */}
         <details className="card rounded-lg shadow p-6 border-0">
-          <summary className="cursor-pointer font-semibold text-gray-900 dark:text-gray-100 mb-4 hover:text-blue-600 transition-colors">
+          <summary className="cursor-pointer font-semibold text-gray-900 dark:text-gray-100 mb-4 hover:text-[#1E3A8A] transition-colors">
             💡 Need inspiration? View example prompts
           </summary>
           <div className="space-y-3 pt-2">
@@ -172,7 +172,7 @@ export default function AIInvoicePage() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setPrompt(example)}
-                  className="text-blue-600 hover:text-blue-700"
+                  className="text-[#1E3A8A] hover:text-[#1E40AF]"
                 >
                   Use this example
                 </Button>
@@ -197,7 +197,8 @@ export default function AIInvoicePage() {
             loading={loading}
             leftIcon={!loading && <span>🚀</span>}
             size="lg"
-            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 px-8"
+            variant="primary"
+            className="px-8"
           >
             {loading ? 'Generating Invoice...' : 'Generate Invoice'}
           </Button>

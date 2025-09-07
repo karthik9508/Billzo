@@ -4,15 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:regular": "next dev",
     "build": "next build --turbopack",
+    "build:regular": "next build",
     "start": "next start"
   },
   "dependencies": {
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.7.0",
-    "@supabase/supabase-js": "^2.57.0",
+    "@supabase/supabase-js": "^2.57.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dotenv": "^17.2.2",
     "jspdf": "^3.0.2",
     "next": "15.5.2",
     "openai": "^5.16.0",

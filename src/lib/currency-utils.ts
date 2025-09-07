@@ -135,7 +135,6 @@ export function formatPDFAmount(amount: number, currencyCode?: CurrencyCode): st
  */
 export function getAllCurrencies() {
   return Object.entries(CURRENCIES).map(([code, info]) => ({
-    code: code as CurrencyCode,
     ...info,
     displayName: `${code} (${info.symbol}) - ${info.name}`
   }));

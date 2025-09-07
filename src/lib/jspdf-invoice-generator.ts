@@ -33,7 +33,7 @@ export function generateInvoicePDF(invoice: Invoice, userProfile?: any): void {
   
   if (userProfile?.company?.address) {
     const addressLines = userProfile.company.address.split('\n');
-    addressLines.forEach(line => {
+    addressLines.forEach((line: string) => {
       doc.text(line, 20, yPos);
       yPos += 8;
     });
@@ -165,7 +165,7 @@ export function previewInvoicePDF(invoice: Invoice): string {
   
   if (userProfile?.company?.address) {
     const addressLines = userProfile.company.address.split('\n');
-    addressLines.forEach(line => {
+    addressLines.forEach((line: string) => {
       doc.text(line, 20, yPos);
       yPos += 8;
     });

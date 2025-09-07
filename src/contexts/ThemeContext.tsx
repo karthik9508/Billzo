@@ -74,8 +74,10 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   };
 
   return (
-    <ThemeContext.Provider value={value} suppressHydrationWarning>
-      {children}
+    <ThemeContext.Provider value={value}>
+      <div suppressHydrationWarning>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 }

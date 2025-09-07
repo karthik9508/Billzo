@@ -194,12 +194,153 @@ export interface Database {
           created_at?: string
         }
       }
+      customers: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          email: string
+          phone: string | null
+          address: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          email: string
+          phone?: string | null
+          address?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          email?: string
+          phone?: string | null
+          address?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      payments: {
+        Row: {
+          id: string
+          user_id: string
+          invoice_id: string | null
+          customer_id: string
+          amount: number
+          payment_date: string
+          payment_method: 'cash' | 'check' | 'bank_transfer' | 'card' | 'other'
+          reference_number: string | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          invoice_id?: string | null
+          customer_id: string
+          amount: number
+          payment_date: string
+          payment_method?: 'cash' | 'check' | 'bank_transfer' | 'card' | 'other'
+          reference_number?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          invoice_id?: string | null
+          customer_id?: string
+          amount?: number
+          payment_date?: string
+          payment_method?: 'cash' | 'check' | 'bank_transfer' | 'card' | 'other'
+          reference_number?: string | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      customer_statements: {
+        Row: {
+          id: string
+          user_id: string
+          customer_id: string
+          statement_number: string
+          from_date: string
+          to_date: string
+          total_sales: number
+          total_payments: number
+          outstanding_balance: number
+          status: 'draft' | 'sent'
+          sent_via: 'email' | 'whatsapp' | 'manual' | null
+          sent_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          customer_id: string
+          statement_number: string
+          from_date: string
+          to_date: string
+          total_sales?: number
+          total_payments?: number
+          outstanding_balance?: number
+          status?: 'draft' | 'sent'
+          sent_via?: 'email' | 'whatsapp' | 'manual' | null
+          sent_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          customer_id?: string
+          statement_number?: string
+          from_date?: string
+          to_date?: string
+          total_sales?: number
+          total_payments?: number
+          outstanding_balance?: number
+          status?: 'draft' | 'sent'
+          sent_via?: 'email' | 'whatsapp' | 'manual' | null
+          sent_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_customer_statement: {
+        Args: {
+          p_user_id: string
+          p_customer_email: string
+          p_from_date?: string | null
+          p_to_date?: string | null
+        }
+        Returns: {
+          customer_name: string
+          customer_email: string
+          customer_phone: string | null
+          customer_address: string | null
+          total_sales: number
+          total_payments: number
+          outstanding_balance: number
+          invoice_count: number
+          payment_count: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

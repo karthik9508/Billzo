@@ -127,7 +127,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const [userProfile, userSettings] = await Promise.all([
         profilePromise,
         settingsPromise
-      ])
+      ]) as [UserProfile | null, UserSettings | null]
       
       setProfile(userProfile)
       setSettings(userSettings)

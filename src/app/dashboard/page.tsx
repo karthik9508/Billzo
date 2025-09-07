@@ -4,14 +4,15 @@ import React from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useDashboard } from '@/hooks/useInvoices'
-import { formatCurrency } from '@/lib/currency-utils'
+import { formatCurrency, CurrencyCode, isSupportedCurrency } from '@/lib/currency-utils'
 import { Button } from '@/components/ui/Button'
 
 export default function DashboardPage() {
   const { user, profile, settings } = useAuth()
   const { invoices: recentInvoices, stats, loading } = useDashboard()
 
-  const currency = settings?.invoiceDefaults?.currency || 'USD'
+  const rawCurrency = settings?.invoiceDefaults?.currency || 'USD'
+  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'USD'
 
   if (!user) {
     return (

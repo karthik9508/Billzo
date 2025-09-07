@@ -48,10 +48,20 @@ export default function PreferencesPage() {
     setMessage(null);
 
     try {
+      // Save to local storage first (always works)
       userStorage.saveSettings(settings);
       
       // Apply theme change immediately using centralized system
       setGlobalTheme(settings.theme);
+
+      // Try to sync with cloud storage if available
+      try {
+        // Note: This would require implementing cloud sync
+        // For now, just save locally
+        console.log('Settings saved locally. Currency:', settings.invoiceDefaults.currency);
+      } catch (cloudError) {
+        console.warn('Cloud sync failed, but settings saved locally:', cloudError);
+      }
 
       setMessage({ type: 'success', text: 'Preferences saved successfully!' });
       

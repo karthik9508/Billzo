@@ -24,8 +24,8 @@ export default function SendStatementPage({ params }: PageProps) {
   const [message, setMessage] = useState<string>('');
   const [sendVia, setSendVia] = useState<'whatsapp' | 'email' | 'manual'>('whatsapp');
 
-  const rawCurrency = settings?.invoiceDefaults?.currency || 'USD';
-  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'USD';
+  const rawCurrency = settings?.invoiceDefaults?.currency || 'INR';
+  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'INR';
 
   useEffect(() => {
     const loadParams = async () => {

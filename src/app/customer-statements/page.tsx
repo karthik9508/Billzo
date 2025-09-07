@@ -16,8 +16,8 @@ export default function CustomerStatementsPage() {
   const [selectedCustomerId, setSelectedCustomerId] = useState<string>('');
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'draft' | 'sent'>('all');
 
-  const rawCurrency = settings?.invoiceDefaults?.currency || 'USD';
-  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'USD';
+  const rawCurrency = settings?.invoiceDefaults?.currency || 'INR';
+  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'INR';
 
   // Filter statements based on selected filters
   const filteredStatements = statements.filter(statement => {

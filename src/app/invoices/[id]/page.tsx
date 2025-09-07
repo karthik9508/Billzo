@@ -8,7 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { generateInvoicePDF } from '@/lib/jspdf-invoice-generator';
 import { Invoice } from '@/types/invoice';
 import { UserProfile } from '@/types/user';
-import { formatInvoiceAmount } from '@/lib/currency-utils';
+import { formatInvoiceAmount, CurrencyCode, getUserCurrency } from '@/lib/currency-utils';
 
 export default function InvoiceDetailPage() {
   const params = useParams();
@@ -19,6 +19,7 @@ export default function InvoiceDetailPage() {
   const { profile } = useAuth();
   const [pdfLoading, setPdfLoading] = useState(false);
   const invoiceRef = useRef<HTMLDivElement>(null);
+  const currency = getUserCurrency();
 
   const updateStatus = async (newStatus: Invoice['status']) => {
     if (invoice) {
@@ -251,8 +252,8 @@ export default function InvoiceDetailPage() {
                   <tr key={item.id} className="border-b border-gray-200">
                     <td className="py-3 text-gray-700 dark:text-gray-300 print:text-black">{item.description}</td>
                     <td className="py-3 text-center text-gray-700 dark:text-gray-300 print:text-black">{item.quantity}</td>
-                    <td className="py-3 text-right text-gray-700 dark:text-gray-300 print:text-black">{formatInvoiceAmount(item.rate)}</td>
-                    <td className="py-3 text-right font-medium text-gray-900 dark:text-gray-100 print:text-black">{formatInvoiceAmount(item.amount)}</td>
+                    <td className="py-3 text-right text-gray-700 dark:text-gray-300 print:text-black">{formatInvoiceAmount(item.rate, currency)}</td>
+                    <td className="py-3 text-right font-medium text-gray-900 dark:text-gray-100 print:text-black">{formatInvoiceAmount(item.amount, currency)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -264,15 +265,15 @@ export default function InvoiceDetailPage() {
           <div className="w-64 space-y-2">
             <div className="flex justify-between py-1">
               <span className="text-gray-600 dark:text-gray-400 print:text-black">Subtotal:</span>
-              <span className="font-medium text-gray-900 dark:text-gray-100 print:text-black">{formatInvoiceAmount(invoice.subtotal)}</span>
+              <span className="font-medium text-gray-900 dark:text-gray-100 print:text-black">{formatInvoiceAmount(invoice.subtotal, currency)}</span>
             </div>
             <div className="flex justify-between py-1">
               <span className="text-gray-600 dark:text-gray-400 print:text-black">Tax:</span>
-              <span className="font-medium text-gray-900 dark:text-gray-100 print:text-black">{formatInvoiceAmount(invoice.tax)}</span>
+              <span className="font-medium text-gray-900 dark:text-gray-100 print:text-black">{formatInvoiceAmount(invoice.tax, currency)}</span>
             </div>
             <div className="flex justify-between py-2 text-lg font-bold border-t border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 print:text-black print:border-black">
               <span>Total:</span>
-              <span>{formatInvoiceAmount(invoice.total)}</span>
+              <span>{formatInvoiceAmount(invoice.total, currency)}</span>
             </div>
           </div>
         </div>

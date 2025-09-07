@@ -23,8 +23,8 @@ export default function NewCustomerStatementPage() {
   const [generating, setGenerating] = useState(false);
   const [creating, setCreating] = useState(false);
 
-  const rawCurrency = settings?.invoiceDefaults?.currency || 'USD';
-  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'USD';
+  const rawCurrency = settings?.invoiceDefaults?.currency || 'INR';
+  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'INR';
 
   // Set default dates (last 30 days)
   React.useEffect(() => {

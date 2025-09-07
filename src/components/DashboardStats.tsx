@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { invoiceStorage } from '@/lib/invoice-storage';
 import { DashboardStats } from '@/types/invoice';
-import { formatInvoiceAmount } from '@/lib/currency-utils';
+import { formatInvoiceAmount, CurrencyCode, getUserCurrency } from '@/lib/currency-utils';
 
 export default function DashboardStatsComponent() {
   const [stats, setStats] = useState<DashboardStats>({
@@ -12,6 +12,9 @@ export default function DashboardStatsComponent() {
     paidAmount: 0,
     overdueInvoices: 0,
   });
+
+  // Get currency from user settings
+  const currency = getUserCurrency();
 
   useEffect(() => {
     const invoices = invoiceStorage.getAll();
@@ -51,13 +54,13 @@ export default function DashboardStatsComponent() {
     },
     {
       title: 'Pending Amount',
-      value: formatInvoiceAmount(stats.pendingAmount),
+      value: formatInvoiceAmount(stats.pendingAmount, currency),
       icon: '⏳',
       color: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-300',
     },
     {
       title: 'Paid Amount',
-      value: formatInvoiceAmount(stats.paidAmount),
+      value: formatInvoiceAmount(stats.paidAmount, currency),
       icon: '✅',
       color: 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300',
     },

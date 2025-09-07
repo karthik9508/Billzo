@@ -31,11 +31,11 @@ export function getUserCurrency(): CurrencyCode {
       return currency;
     }
   } catch (error) {
-    console.warn('Error getting user currency, falling back to USD:', error);
+    console.warn('Error getting user currency, falling back to INR:', error);
   }
   
-  // Fallback to USD if not set or invalid
-  return 'USD';
+  // Fallback to INR if not set or invalid
+  return 'INR';
 }
 
 /**
@@ -43,7 +43,7 @@ export function getUserCurrency(): CurrencyCode {
  */
 export function getCurrencySymbol(currencyCode?: CurrencyCode): string {
   const code = currencyCode || getUserCurrency();
-  return CURRENCIES[code]?.symbol || '$';
+  return CURRENCIES[code]?.symbol || '₹';
 }
 
 /**
@@ -51,7 +51,7 @@ export function getCurrencySymbol(currencyCode?: CurrencyCode): string {
  */
 export function getCurrencyInfo(currencyCode?: CurrencyCode) {
   const code = currencyCode || getUserCurrency();
-  return CURRENCIES[code] || CURRENCIES.USD;
+  return CURRENCIES[code] || CURRENCIES.INR;
 }
 
 /**
@@ -108,7 +108,7 @@ export function formatInvoiceAmount(amount: number, currencyCode?: CurrencyCode)
  */
 export function formatPDFAmount(amount: number, currencyCode?: CurrencyCode): string {
   const code = currencyCode || getUserCurrency();
-  const currency = CURRENCIES[code] || CURRENCIES.USD;
+  const currency = CURRENCIES[code] || CURRENCIES.INR;
   
   // Format the number with appropriate decimal places
   const formattedNumber = amount.toFixed(2);

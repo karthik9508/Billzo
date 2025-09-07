@@ -7,7 +7,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Invoice, InvoiceItem } from '@/types/invoice';
 import { UserSettings } from '@/types/user';
 import ThemeToggle from '@/components/TextColorToggle';
-import { formatInvoiceAmount } from '@/lib/currency-utils';
+import { formatInvoiceAmount, CurrencyCode, isSupportedCurrency } from '@/lib/currency-utils';
+import CurrencyInput, { CurrencyInputInvoice } from '@/components/CurrencyInput';
+import CurrencyDisplay from '@/components/CurrencyDisplay';
 
 export default function ManualInvoicePage() {
   const router = useRouter();
@@ -83,6 +85,10 @@ export default function ManualInvoicePage() {
   const taxRate = settings?.invoiceDefaults.taxRate || 10;
   const tax = subtotal * (taxRate / 100);
   const total = subtotal + tax;
+
+  // Get user's selected currency
+  const rawCurrency = settings?.invoiceDefaults?.currency || 'INR';
+  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'INR';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,16 +256,12 @@ export default function ManualInvoicePage() {
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Rate ($)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    step="0.01"
+                  <CurrencyInputInvoice
+                    label="Rate"
                     value={item.rate}
-                    onChange={(e) => updateItem(item.id, 'rate', parseFloat(e.target.value) || 0)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    onChange={(value) => updateItem(item.id, 'rate', value)}
+                    currency={currency}
+                    showCode={true}
                   />
                 </div>
 
@@ -267,8 +269,8 @@ export default function ManualInvoicePage() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Amount
                   </label>
-                  <div className="amount-display px-3 py-2 border rounded-md text-right font-medium">
-                    {formatInvoiceAmount(item.amount)}
+                  <div className="amount-display px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-right font-medium bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                    <CurrencyDisplay amount={item.amount} currency={currency} />
                   </div>
                 </div>
 
@@ -294,15 +296,21 @@ export default function ManualInvoicePage() {
             <div className="w-64 space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
-                <span className="font-medium text-gray-900 dark:text-gray-100">{formatInvoiceAmount(subtotal)}</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">
+                  <CurrencyDisplay amount={subtotal} currency={currency} />
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 dark:text-gray-400">Tax ({taxRate}%):</span>
-                <span className="font-medium text-gray-900 dark:text-gray-100">{formatInvoiceAmount(tax)}</span>
+                <span className="font-medium text-gray-900 dark:text-gray-100">
+                  <CurrencyDisplay amount={tax} currency={currency} />
+                </span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t pt-2 text-gray-900 dark:text-gray-100">
                 <span>Total:</span>
-                <span>{formatInvoiceAmount(total)}</span>
+                <span>
+                  <CurrencyDisplay amount={total} currency={currency} className="text-lg font-bold" />
+                </span>
               </div>
             </div>
           </div>

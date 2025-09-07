@@ -5,12 +5,13 @@ import Link from 'next/link';
 import { useInvoices } from '@/hooks/useInvoices';
 import { Invoice } from '@/types/invoice';
 import PDFDownloadButton from '@/components/PDFDownloadButton';
-import { formatInvoiceAmount } from '@/lib/currency-utils';
+import { formatInvoiceAmount, CurrencyCode, getUserCurrency } from '@/lib/currency-utils';
 import { Button } from '@/components/ui/Button';
 
 export default function InvoicesPage() {
   const { invoices, loading, error, deleteInvoice } = useInvoices();
   const [filter, setFilter] = useState<'all' | 'draft' | 'sent' | 'paid' | 'overdue'>('all');
+  const currency = getUserCurrency();
 
 
   const filteredInvoices = invoices.filter(invoice => 
@@ -132,7 +133,7 @@ export default function InvoicesPage() {
                       </Link>
                     </td>
                     <td className="py-4 px-6 text-gray-900 dark:text-gray-100">{invoice.client.name}</td>
-                    <td className="py-4 px-6 font-medium">{formatInvoiceAmount(invoice.total)}</td>
+                    <td className="py-4 px-6 font-medium">{formatInvoiceAmount(invoice.total, currency)}</td>
                     <td className="py-4 px-6">
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(invoice.status)}`}>
                         {invoice.status}

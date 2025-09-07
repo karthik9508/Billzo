@@ -71,12 +71,12 @@ export const DEFAULT_USER_SETTINGS: UserSettings = {
   },
   invoiceDefaults: {
     taxRate: 10,
-    currency: 'USD',
+    currency: 'INR',
     paymentTerms: 'Net 30',
     notes: 'Thank you for your business!',
   },
   preferences: {
-    dateFormat: 'MM/DD/YYYY',
+    dateFormat: 'DD/MM/YYYY',
     numberFormat: 'US',
     autoSave: true,
   },

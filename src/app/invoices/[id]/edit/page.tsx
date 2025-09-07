@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useInvoice, useInvoices } from '@/hooks/useInvoices';
 import { Invoice, InvoiceItem } from '@/types/invoice';
 import ThemeToggle from '@/components/TextColorToggle';
-import { formatInvoiceAmount } from '@/lib/currency-utils';
+import { formatInvoiceAmount, CurrencyCode, getUserCurrency } from '@/lib/currency-utils';
 
 export default function EditInvoicePage() {
   const params = useParams();
@@ -14,6 +14,7 @@ export default function EditInvoicePage() {
   const { invoice, loading, error } = useInvoice(invoiceId);
   const { saveInvoice } = useInvoices();
   const [saving, setSaving] = useState(false);
+  const currency = getUserCurrency();
   
   const [formData, setFormData] = useState({
     clientName: '',
@@ -307,7 +308,7 @@ export default function EditInvoicePage() {
                     Amount
                   </label>
                   <div className="amount-display px-3 py-2 border rounded-md text-right font-medium">
-                    {formatInvoiceAmount(item.amount)}
+                    {formatInvoiceAmount(item.amount, currency)}
                   </div>
                 </div>
 
@@ -333,15 +334,15 @@ export default function EditInvoicePage() {
             <div className="w-64 space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">Subtotal:</span>
-                <span className="font-medium">{formatInvoiceAmount(subtotal)}</span>
+                <span className="font-medium">{formatInvoiceAmount(subtotal, currency)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Tax (10%):</span>
-                <span className="font-medium">{formatInvoiceAmount(tax)}</span>
+                <span className="font-medium">{formatInvoiceAmount(tax, currency)}</span>
               </div>
               <div className="flex justify-between text-lg font-bold border-t pt-2">
                 <span>Total:</span>
-                <span>{formatInvoiceAmount(total)}</span>
+                <span>{formatInvoiceAmount(total, currency)}</span>
               </div>
             </div>
           </div>

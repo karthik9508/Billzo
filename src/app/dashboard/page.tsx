@@ -4,15 +4,20 @@ import React from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import { useDashboard } from '@/hooks/useInvoices'
-import { formatCurrency, CurrencyCode, isSupportedCurrency } from '@/lib/currency-utils'
+import { formatCurrency, CurrencyCode, isSupportedCurrency, getUserCurrency } from '@/lib/currency-utils'
 import { Button } from '@/components/ui/Button'
 
 export default function DashboardPage() {
   const { user, profile, settings } = useAuth()
   const { invoices: recentInvoices, stats, loading } = useDashboard()
 
-  const rawCurrency = settings?.invoiceDefaults?.currency || 'USD'
-  const currency: CurrencyCode = isSupportedCurrency(rawCurrency) ? rawCurrency : 'USD'
+  // Get currency from settings, default to INR (force INR for now)
+  const rawCurrency = settings?.invoiceDefaults?.currency || getUserCurrency()
+  // TEMPORARY: Force INR until localStorage is cleared
+  const currency: CurrencyCode = 'INR'
+  
+  // Debug: Log the currency being used
+  console.log('Dashboard currency (FORCED):', currency, 'Raw:', rawCurrency)
 
   if (!user) {
     return (
